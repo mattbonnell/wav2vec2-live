@@ -119,7 +119,7 @@ class LiveWav2Vec2:
 if __name__ == "__main__":
     print("Live ASR")
 
-    hotwords = ["hibachi", "tempura", "rangoon", "lomein"]
+    hotwords = ["hibachi", "tempura", "rangoon", "lomein", "beef", "chicken", "pork", "shrimp", "sushi", "sashimi", "nigiri", "maki", "sake", "tuna", "salmon", "eel", "avocado", "cucumber", "wasabi", "ginger", "soysauce", "sake", "sapporo", "kirin", "asahi"]
 
     asr = LiveWav2Vec2("jonatasgrosman/wav2vec2-large-xlsr-53-english")
 
