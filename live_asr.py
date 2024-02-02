@@ -10,9 +10,10 @@ from queue import  Queue
 
 class LiveWav2Vec2:
     exit_event = threading.Event()
-    def __init__(self, model_name, device_name="default"):
+    def __init__(self, model_name, hotwords=[], device_name="default"):
         self.model_name = model_name
         self.device_name = device_name
+        self.hotwords = hotwords
 
     def stop(self):
         """stop the asr process"""
@@ -25,7 +26,7 @@ class LiveWav2Vec2:
         self.asr_output_queue = Queue()
         self.asr_input_queue = Queue()
         self.asr_process = threading.Thread(target=LiveWav2Vec2.asr_process, args=(
-            self.model_name, self.asr_input_queue, self.asr_output_queue,))
+            self.model_name, self.hotwords, self.asr_input_queue, self.asr_output_queue,))
         self.asr_process.start()
         time.sleep(5)  # start vad after asr model is loaded
         self.vad_process = threading.Thread(target=LiveWav2Vec2.vad_process, args=(
@@ -73,8 +74,8 @@ class LiveWav2Vec2:
         audio.terminate()
 
     @staticmethod
-    def asr_process(model_name, in_queue, output_queue):
-        wave2vec_asr = Wave2Vec2Inference(model_name, use_lm_if_possible=True)
+    def asr_process(model_name, hotwords, in_queue, output_queue):
+        wave2vec_asr = Wave2Vec2Inference(model_name, hotwords=hotwords, use_lm_if_possible=True)
 
         print("\nlistening to your voice\n")
         while True:
@@ -117,6 +118,8 @@ class LiveWav2Vec2:
 
 if __name__ == "__main__":
     print("Live ASR")
+
+    hotwords = ["hibachi", "tempura", "rangoon", "lomein"]
 
     asr = LiveWav2Vec2("oliverguhr/wav2vec2-large-xlsr-53-german-cv9")
 
